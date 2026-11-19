@@ -308,7 +308,7 @@ FEATURES = [
     (8, "TANKERS BURN IN HORMUZ", None,
      "Three tankers reported on fire in the Strait of Hormuz as Iran "
      "widens attacks on Kuwait and Bahrain."),
-    (9, "HOOTHI MISSILE REACHES RIYADH", None,
+    (9, "HOUTHI MISSILE REACHES RIYADH", None,
      "Debris from a Houthi missile damages the PIF Tower in Riyadh; the "
      "coalition intercepts another launch."),
     (10, "ISRAEL ENTERS CENTRAL GAZA", None,
