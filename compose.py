@@ -2,17 +2,20 @@
 """Compose "The World in One Day" — a dense broadsheet front page that sums
 up Thursday 19 November 2026 in a single 1024x1024 image.
 
-The page follows the broadsheet meta: a masthead, a numbers band, a region
-band, three hero stories, ten more numbered feature cards, a dot-matrix
-world map with numbered pins for the feature stories, a UTC timeline, 27
-one-line briefs, and five boxes none of the other front pages carry — SPORT,
-WEATHER WATCH, MARKETS, QUOTE OF THE DAY and a FRIDAY PREVIEW — above a red
-DATE CHECK box in the footer. 44 stories in all.
+Third edition of the page. The first edition carried four stories dated to
+Thursday that had in fact broken earlier in the week; this edition strikes
+them out, names them in a CORRECTIONS & CLARIFICATIONS strip, and rebuilds
+the page from the full day's wire record now that Thursday is history:
+three hero stories, ten more numbered features, a PICTURE OF THE DAY panel,
+36 one-line briefs, a dot-matrix world map with numbered pins, a UTC
+timeline, six numbers, and the five boxes the other front pages do not
+carry — SPORT, WEATHER WATCH, MARKETS, QUOTE OF THE DAY and a FRIDAY
+PREVIEW — above a red DATE CHECK footer. 50 stories in all.
 
-Three of the feature stories reuse the editorial illustration panels in
-assets/ (summit, ICJ, COP31); the GTA VI hero art (a purple Vice City
-skyline) and the Anthropic hero art (a green market chart) are drawn here
-with Pillow, as is every word on the page.
+Three of the feature stories and the picture panel reuse the editorial
+illustration panels in assets/ (summit, ICJ, COP31, Hormuz); the GTA VI
+hero art (a purple Vice City skyline) and the Anthropic hero art (a green
+market chart) are drawn here with Pillow, as is every word on the page.
 
 Run:  python3 compose.py     -> writes entry.png next to this file.
 The output is deterministic: two runs produce byte-identical files.
@@ -202,8 +205,8 @@ def market_chart_art(w, h):
         pts.append((cx, y_c))
     d.line(pts, fill=(167, 243, 208), width=2)
     # label sits right of the story badge the page draws over the corner
-    d.text((38, 5), "ANT $83", font=F(SANS_B, 16), fill=(134, 239, 172))
-    d.text((38, 25), "NASDAQ DEBUT", font=F(SANS_B, 8), fill=(110, 190, 150))
+    d.text((38, 5), "ANT $97.17", font=F(SANS_B, 16), fill=(134, 239, 172))
+    d.text((38, 25), "CLOSE +17%", font=F(SANS_B, 8), fill=(110, 190, 150))
     return img
 
 
@@ -234,22 +237,22 @@ MAP_SPANS = {
 }
 MAP_COLS, MAP_ROWS = 92, 19
 
-# (column, row) of each feature story on the grid, plus a pixel nudge so
+# (column, row) of each hero/feature story on the grid, plus a pixel nudge so
 # crowded pins (the Gulf cluster, the Black Sea cluster) never overlap.
 PINS = {
     1: (75, 8, 0, 0),        # Shenzhen
     2: (26, 8, 0, 0),        # GTA VI — Miami / Vice City
     3: (27, 6, 6, -4),       # Anthropic IPO — New York
-    4: (47, 4, 0, 0),        # ICJ — The Hague
+    4: (47, 4, -6, 2),       # ICJ — The Hague
     5: (54, 6, 2, 6),        # COP31 — Antalya
     6: (68, 8, 0, 0),        # Cyclone Akvan — Odisha
     7: (55, 5, 10, -4),      # Kerch Bridge
     8: (60, 8, -6, -6),      # Strait of Hormuz
     9: (59, 8, -2, 8),       # Riyadh
     10: (56, 7, 4, 7),       # Gaza
-    11: (78, 6, 0, 0),       # Suneung — Seoul
-    12: (54, 4, -10, -3),    # Kyiv
-    13: (60, 8, 14, 10),     # Abu Dhabi talks
+    11: (78, 6, 0, 0),       # Han retrial — Seoul
+    12: (48, 3, 8, -6),      # Arctic pact — Copenhagen
+    13: (83, 14, 0, 0),      # Jobs shock — Canberra
 }
 
 
@@ -272,113 +275,144 @@ def draw_map(page, draw, x, y, w, h):
 # --- content -----------------------------------------------------------------------
 
 NUMBERS = [
-    ("$81.3bn", "Anthropic's record IPO raise"),
-    ("15.9m", "GTA VI pre-orders"),
-    ("200,000", "evacuated ahead of Cyclone Akvan"),
-    ("$120bn", "COP31 adaptation fund proposed"),
-    ("730,000", "Rohingya fled Myanmar"),
-    ("551,864", "students sit South Korea's Suneung exam"),
+    ("9–6", "the World Court's genocide verdict"),
+    ("$81.3bn", "raised in Anthropic's record IPO"),
+    ("$1.84bn", "GTA VI's first-day sales, estimated"),
+    ("204,070", "listed for evacuation in Odisha"),
+    ("109–0", "Denmark's Arctic pact vote"),
+    ("4.9%", "Australia's jobless rate, a 5-year high"),
 ]
 
 HEROES = [
     ("SHENZHEN SUMMIT", "summit",
-     "Trump, Xi & Putin hold their first trilateral summit on the APEC "
-     "sidelines — and announce a 'peace declaration' after 90 minutes."),
+     "Trump, Xi and Putin meet for 90 minutes at Kylin Villa and sign a "
+     "four-point peace declaration — nuclear-risk talks, energy, UN "
+     "reform — that never mentions Ukraine."),
     ("GTA VI LAUNCH", "vice",
-     "Rockstar's GTA VI goes on sale at midnight — 15.9 million pre-orders "
-     "and a 99/100 Metacritic score."),
+     "Thirteen years on, GTA VI rolls out from New Zealand at midnight: "
+     "a record 99 on Metacritic, and an estimated $1.84bn of sales on "
+     "day one."),
     ("ANTHROPIC'S RECORD IPO", "chart",
-     "Anthropic raises a record $81.3bn in its Nasdaq debut, valuing the "
-     "AI lab at about $1.5 trillion."),
+     "ANT opens at $111.50 and closes at $97.17, up 17% on the $83 price "
+     "set the night before — the biggest IPO ever, $107.3bn raised in "
+     "all."),
 ]
 
 FEATURES = [
-    (4, "WORLD COURT RULES ON ROHINGYA", "icj",
-     "The ICJ rules Myanmar committed state-sponsored genocide in The "
-     "Gambia's case — the first ruling of its kind."),
-    (5, "COP31 DEADLOCKED IN ANTALYA", "cop31",
-     "Climate talks stall in their final 48 hours over fossil fuels and "
-     "the proposed $120bn adaptation fund."),
-    (6, "CYCLONE AKVAN", None,
-     "200,000 people evacuated across Odisha and Andhra Pradesh as Akvan "
-     "strengthens; landfall expected Friday."),
+    (4, "WORLD COURT: GENOCIDE RULING", "icj",
+     "By 9 votes to 6 the Court finds Myanmar committed genocide "
+     "against the Rohingya — a first — and orders reparations."),
+    (5, "COP31 DRAFT DROPS FOSSIL FUELS", "cop31",
+     "The slimmed Thursday draft drops the $120bn adaptation target "
+     "and all fossil-fuel language; final text due Friday."),
+    (6, "CYCLONE AKVAN NEARS LANDFALL", None,
+     "204,070 people are listed for evacuation in Odisha as Akvan "
+     "bears down on the Andhra coast; landfall is due Friday at noon."),
     (7, "CRIMEAN BRIDGE STRUCK AGAIN", None,
-     "Ukraine hits the Kerch Bridge for the third time in a week; rail "
-     "traffic across the strait halted."),
-    (8, "TANKERS BURN IN HORMUZ", None,
-     "Three tankers reported on fire in the Strait of Hormuz as Iran "
-     "widens attacks on Kuwait and Bahrain."),
-    (9, "HOUTHI MISSILE REACHES RIYADH", None,
-     "Debris from a Houthi missile damages the PIF Tower in Riyadh; the "
-     "coalition intercepts another launch."),
-    (10, "ISRAEL ENTERS CENTRAL GAZA", None,
-     "Israeli forces launch a ground operation near Nuseirat, the first "
-     "beyond the 'Yellow Line' since the ceasefire."),
-    (11, "SUNEUNG DAY IN SEOUL", None,
-     "551,864 students sit South Korea's make-or-break university exam; "
-     "flights paused, markets open late."),
-    (12, "KYIV: NOT WITHOUT US", None,
-     "Zelenskyy insists no peace decisions about Ukraine can be made "
-     "without Ukraine at the table."),
-    (13, "ABU DHABI TALKS STALL", None,
-     "Ukraine-Russia-US talks end without a breakthrough as strikes black "
-     "out eastern Ukraine's power grid."),
+     "Ukraine strikes the Kerch Bridge for the third time in a week; "
+     "Russia halts traffic while the damage is assessed."),
+    (8, "TANKERS HIT MINES IN HORMUZ", None,
+     "Iran's Guards say two tankers struck naval mines and are "
+     "burning in the strait; US officials dispute Tehran's account."),
+    (9, "HOUTHI MISSILES OVER RIYADH", None,
+     "Saudi defences shoot down Houthi missiles over Riyadh; debris "
+     "damages buildings in the capital, with no casualties reported."),
+    (10, "ISRAEL ENDS GAZA TANK RAID", None,
+     "Israel says its tank raid past the Yellow Line, begun on "
+     "Wednesday, is over; Hamas calls the push a breach of the truce."),
+    (11, "SEOUL: EX-PM HAN WINS RETRIAL", None,
+     "South Korea's top court quashes part of Han Duck-soo's 15-year "
+     "martial-law sentence and orders a retrial; he stays in detention."),
+    (12, "DENMARK BACKS ARCTIC PACT", None,
+     "Parliament votes 109–0 to ratify the Arctic security pact with "
+     "the US and Greenland, clearing more American bases on the island."),
+    (13, "AUSTRALIA'S JOBLESS HITS 4.9%", None,
+     "Employment falls 43,500 in a shock print that takes another RBA "
+     "hike off the table and sinks the dollar to a 2026 low."),
 ]
 
+PICTURE = (
+    14, "hormuz",
+    "Fire on the water in the Strait of Hormuz (illustration). With "
+    "mines reported in the shipping lanes, crude moving through the "
+    "strait runs at about 8.5m barrels a day — half the pre-war flow.",
+)
+
 BRIEFS = [
-    (14, "Odesa strike kills 4, injures 13"),
-    (15, "EU proposes €45bn Ukraine loan"),
-    (16, "EU delays methane rules under US pressure"),
-    (17, "Cyberattack reported at the European Commission"),
-    (18, "Prince Harry open to service against Russia"),
-    (19, "Japan's Takaichi: Taiwan position unchanged"),
-    (20, "Seoul renews dialogue call to Pyongyang"),
-    (21, "IAEA: North Korea expanding uranium enrichment"),
-    (22, "Yunus ancestral home torched in Bangladesh"),
-    (23, "Indonesia passes asset-forfeiture law"),
-    (24, "US-China AI chip curbs stay in place"),
-    (25, "Flooding rains swamp Florida coast"),
-    (26, "Earth's 'missing billion years' of rock explained"),
-    (27, "Mélenchon rallies supporters in Paris"),
-    (28, "Record cocaine haul seized near Benghazi"),
-    (29, "Paro Nacional strike shuts Bogotá"),
-    (30, "Australia unemployment rises"),
-    (31, "Russian charged with spying on Silicon Valley defence staff"),
-    (32, "Court fight over Venezuelan migrant protections"),
-    (33, "Democrats nominate Jeffries for Speaker, 251-11"),
-    (34, "Musk regrets midterm campaign spending"),
-    (35, "Terror charges over Illinois temple plot"),
-    (36, "US and Venezuela restore military ties"),
-    (37, "Pastor convicted over Moïse assassination"),
-    (38, "Ebola response struggles in DR Congo"),
-    (39, "RSF commander defects in Sudan"),
-    (40, "Migrant boat sinks off Senegal, dozens missing"),
+    (15, "Odesa strike kills 4 and injures 13"),
+    (16, "Zelenskyy: no talks on Ukraine without Ukraine"),
+    (17, "Kyiv says it hit two oil refineries at Krasnodar"),
+    (18, "EU delays its methane rules by two years"),
+    (19, "Berlin charges an entrepreneur as a Russian informant"),
+    (20, "French left splits over a Mélenchon pact"),
+    (21, "Rome: author Corrado Augias dies at 91"),
+    (22, "Two rivals to challenge FIFA's Infantino"),
+    (23, "Inquiry: yacht Bayesian was vulnerable to wind"),
+    (24, "APEC adopts the Shenzhen Outlook on trade and AI"),
+    (25, "551,864 sit the Suneung exam; flights paused"),
+    (26, "Jakarta passes its asset-seizure law after 18 years"),
+    (27, "Awami League shutdown idles parts of Bangladesh"),
+    (28, "Takaichi: Japan's Taiwan position is unchanged"),
+    (29, "Seoul renews its dialogue call to Pyongyang"),
+    (30, "India and Japan review their defence ties"),
+    (31, "US pursues a $2bn Philippines loan package"),
+    (32, "Carney sets out a China deal in Ottawa"),
+    (33, "Paro Nacional strike shuts Bogotá"),
+    (34, "Banxico minutes signal a long pause at 6.25%"),
+    (35, "Floods shut South Florida schools again"),
+    (36, "California braces for an atmospheric river"),
+    (37, "Musk calls his midterm splurge 'pretty foolish'"),
+    (38, "Houthi media report Saudi strikes on Sanaa"),
+    (39, "Bapco refinery back on its feet in Bahrain"),
+    (40, "Floods kill six in Kenya; hundreds displaced"),
+    (41, "Somalia expels the UAE ambassador"),
+    (42, "Sudan court sentences the absent RSF chief to death"),
+    (43, "Cocaine and millions of pills seized near Benghazi"),
+    (44, "Senegal: search resumes for a capsized boat's missing"),
+    (45, "Pretoria holds the central bank rate at 7.25%"),
+    (46, "Tonga declares a nationwide drought emergency"),
+    (47, "Cyclone Xavier weakens to category 4"),
+    (48, "Wellington court: pay-equity cuts broke the law"),
+    (49, "A red giant star is seen eating a Sun-sized star"),
+    (50, "IEA: Hormuz is history's worst energy-security threat"),
 ]
 
 BOXES = [
     ("SPORT",
-     "Duckett's 133 seals an ODI series win for England · GTA VI midnight "
-     "queues wrap around stores in New York and London."),
+     "Jepchirchir banned 3 years for EPO; her Sydney title passes to "
+     "Cheptai · Duckett's 133 seals England's ODI win."),
     ("WEATHER WATCH",
-     "Cyclone Akvan: 130 km/h winds, Odisha landfall Friday · Florida: "
-     "flood warnings on the southeast coast · Fiji: state of disaster "
-     "declared in El Niño drought."),
+     "Akvan: winds to 145 km/h, landfall Friday noon · Tonga declares "
+     "a drought emergency."),
     ("MARKETS",
-     "ANT debuts at $83 after record $81.3bn raise · Fed minutes: rates "
-     "held, further hikes expected · Deutsche Bank probed after 15m-file "
-     "leak."),
+     "ANT +17% at $97.17 on day one · Brent near $92 on the Hormuz "
+     "reports · Aussie dollar at a 2026 low."),
     ("QUOTE OF THE DAY",
-     "\"We'll see what happens.\" — Donald Trump, on the Iran war after "
-     "1 January."),
+     "\"End your war, end it now.\" — Anthony Albanese to Vladimir "
+     "Putin, at APEC."),
     ("FRIDAY PREVIEW",
-     "Akvan makes landfall · Anthropic's first full trading day · COP31's "
-     "final text due in Antalya."),
+     "Akvan makes landfall · COP31's final text lands in Antalya · "
+     "GTA VI's first official sales tally."),
 ]
 
 TIMELINE = (
-    "00:00 GTA VI on sale in New Zealand · MORNING Shenzhen summit opens · "
-    "09:00 World Court ruling, The Hague · ALL DAY Kerch Bridge closed · "
-    "14:30 Anthropic rings the Nasdaq bell · EVENING COP31 endgame in Antalya"
+    "00:00 GTA VI unlocks in New Zealand · 04:42 air-raid sirens sound "
+    "in Riyadh · 09:00 the World Court reads its ruling · 16:48 "
+    "Anthropic's first trade in New York · ALL DAY the Kerch Bridge "
+    "stays shut · EVENING COP31's slimmed draft lands in Antalya"
+)
+
+CORRECTIONS = (
+    "CORRECTIONS — our first edition mis-dated four stories: the EU's "
+    "€45bn loan and the Jeffries vote (Wed), the Deutsche Bank files "
+    "(Tue), the 'missing billion years' study (4 Nov)."
+)
+
+DATE_CHECK = (
+    "DATE CHECK — first reported before Thursday and left out on "
+    "purpose: the $190.4m Van Gogh sale (Wed) · Voyager 1's light-day "
+    "(Wed) · the US–Venezuela military deal (Wed) · the IAEA's North "
+    "Korea report (Wed) · Bolivia's El Niño decree (31 Oct)."
 )
 
 
@@ -397,8 +431,8 @@ def main():
              F(SANS_B, 17), CRIMSON)
     draw.rectangle([x0, 90, x1, 92], fill=GOLD)
     draw.rectangle([x0, 96, x1, 118], fill=CRIMSON)
-    strap = ("44 STORIES · 7 REGIONS · EVERY STORY FIRST REPORTED ON "
-             "THURSDAY · DATE-CHECKED")
+    strap = ("50 STORIES · 7 REGIONS · EVERY STORY FIRST REPORTED ON "
+             "THURSDAY · DATE-CHECKED AND CORRECTED")
     centered(draw, CANVAS / 2, 107, strap,
              fit_one_line(draw, strap, SANS_B, 14, WIDTH - 20), (255, 255, 255))
 
@@ -408,48 +442,48 @@ def main():
     bw = (WIDTH - 5 * gap) // 6
     for i, (num, label) in enumerate(NUMBERS):
         bx = x0 + i * (bw + gap)
-        draw.rectangle([bx, y, bx + bw, y + 44], fill=NAVY)
-        centered(draw, bx + bw / 2, y + 13, num,
-                 fit_one_line(draw, num, SERIF_B, 19, bw - 10), GOLD)
-        block(draw, bx + 5, y + 24, label, SANS_R, 9, bw - 10, 2,
-              (240, 235, 220), line_h=10, align="center")
+        draw.rectangle([bx, y, bx + bw, y + 40], fill=NAVY)
+        centered(draw, bx + bw / 2, y + 11, num,
+                 fit_one_line(draw, num, SERIF_B, 18, bw - 10), GOLD)
+        block(draw, bx + 5, y + 20, label, SANS_R, 8, bw - 10, 2,
+              (240, 235, 220), line_h=9, align="center")
 
     # 3 — region band ------------------------------------------------------------
-    y = 174
+    y = 170
     draw.line([(x0, y), (x1, y)], fill=NAVY, width=1)
-    regions = ("ASIA-PACIFIC 11 · EUROPE 9 · THE AMERICAS 10 · MIDDLE EAST 5 "
-               "· AFRICA 4 · OCEANIA 2 · WORLD 3")
-    centered(draw, CANVAS / 2, y + 11, regions,
+    regions = ("ASIA-PACIFIC 11 · EUROPE 13 · THE AMERICAS 7 · MIDDLE EAST 6 "
+               "· AFRICA 6 · OCEANIA 4 · WORLD 3")
+    centered(draw, CANVAS / 2, y + 9, regions,
              fit_one_line(draw, regions, SANS_B, 13, WIDTH), NAVY)
-    draw.line([(x0, y + 22), (x1, y + 22)], fill=NAVY, width=1)
+    draw.line([(x0, y + 20), (x1, y + 20)], fill=NAVY, width=1)
 
     # 4 — hero row -----------------------------------------------------------------
-    y = 204
+    y = 198
     card_w = (WIDTH - 2 * 8) // 3
-    card_h = 172
+    card_h = 152
     for i, (headline, art, body) in enumerate(HEROES):
         cx = x0 + i * (card_w + 8)
         draw.rectangle([cx, y, cx + card_w, y + card_h], fill=PAPER,
                        outline=NAVY, width=1)
         if art == "summit":
-            img = panel("summit.png", card_w - 2, 78)
+            img = panel("summit.png", card_w - 2, 66)
         elif art == "vice":
-            img = vice_city_art(card_w - 2, 78)
+            img = vice_city_art(card_w - 2, 66)
         else:
-            img = market_chart_art(card_w - 2, 78)
+            img = market_chart_art(card_w - 2, 66)
         page.paste(img, (cx + 1, y + 1))
         draw = ImageDraw.Draw(page)
         badge(draw, cx + 13, y + 13, i + 1, r=9)
-        block(draw, cx + 8, y + 86, headline, SERIF_B, 14, card_w - 16, 1,
+        block(draw, cx + 8, y + 74, headline, SERIF_B, 14, card_w - 16, 1,
               NAVY, line_h=16)
-        block(draw, cx + 8, y + 104, body, SANS_R, 10, card_w - 16, 4,
+        block(draw, cx + 8, y + 92, body, SANS_R, 10, card_w - 16, 4,
               INK, line_h=13)
 
     # 5 — feature cards 4–13 ---------------------------------------------------------
-    y = 384
+    y = 358
     cols, rows = 5, 2
     fw = (WIDTH - (cols - 1) * 6) // cols
-    fh = 100
+    fh = 92
     for idx, (num, headline, thumb, summary) in enumerate(FEATURES):
         cx = x0 + (idx % cols) * (fw + 6)
         cy = y + (idx // cols) * (fh + 6)
@@ -464,30 +498,43 @@ def main():
         badge(draw, cx + 11, ty + 7, num, r=8)
         block(draw, cx + 23, ty, headline, SERIF_B, 11, fw - 28, 2, NAVY,
               line_h=13)
-        block(draw, cx + 6, ty + 28, summary, SANS_R, 9, fw - 12, 4, INK,
-              line_h=11)
+        block(draw, cx + 6, ty + 28, summary, SANS_R, 9, fw - 12,
+              3 if thumb else 4, INK, line_h=11)
 
     # 6 — map box -----------------------------------------------------------------------
-    y = 596
-    draw.rectangle([x0, y, x1, y + 126], outline=NAVY, width=1)
+    y = 556
+    draw.rectangle([x0, y, x1, y + 102], outline=NAVY, width=1)
     draw.rectangle([x0, y, x1, y + 18], fill=NAVY)
     draw.text((x0 + 8, y + 4), "WHERE IT HAPPENED", font=F(SANS_B, 11),
               fill=(255, 255, 255))
-    note = "red pins 1–13 = the feature stories above"
+    note = "red pins 1–13 = the hero and feature stories above"
     draw.text((x1 - 8 - text_w(draw, note, F(SANS_R, 9)), y + 5), note,
               font=F(SANS_R, 9), fill=(210, 215, 230))
-    draw_map(page, draw, x0 + 6, y + 22, WIDTH - 12, 100)
+    draw_map(page, draw, x0 + 6, y + 22, WIDTH - 12, 76)
 
-    # 7 — timeline strip ------------------------------------------------------------------
-    y = 730
+    # 7 — picture of the day (story 14) ---------------------------------------------------
+    y = 666
+    pnum, part, pcap = PICTURE
+    draw.rectangle([x0, y, x1, y + 52], fill=PAPER, outline=NAVY, width=1)
+    img = panel(f"{part}.png", 196, 50)
+    page.paste(img, (x0 + 1, y + 1))
+    draw = ImageDraw.Draw(page)
+    badge(draw, x0 + 14, y + 14, pnum, r=9)
+    draw.text((x0 + 206, y + 5), "PICTURE OF THE DAY", font=F(SERIF_B, 13),
+              fill=NAVY)
+    block(draw, x0 + 206, y + 23, pcap, SANS_R, 9, WIDTH - 214, 2, INK,
+          line_h=11)
+
+    # 8 — timeline strip ------------------------------------------------------------------
+    y = 726
     draw.text((x0, y), "THE DAY BY THE CLOCK — UTC", font=F(SANS_B, 12),
               fill=CRIMSON)
-    block(draw, x0, y + 16, TIMELINE, SANS_R, 10, WIDTH, 2, INK, line_h=13)
+    block(draw, x0, y + 16, TIMELINE, SANS_R, 10, WIDTH, 2, INK, line_h=12)
 
-    # 8 — briefs 14–40 ----------------------------------------------------------------------
-    y = 776
-    col_w = (WIDTH - 2 * 12) // 3
-    columns = [BRIEFS[0:9], BRIEFS[9:18], BRIEFS[18:27]]
+    # 9 — briefs 15–50 ----------------------------------------------------------------------
+    y = 772
+    col_w = (WIDTH - 3 * 12) // 4
+    columns = [BRIEFS[i * 9:(i + 1) * 9] for i in range(4)]
     size = 10
     while size > 8:  # shrink until the tallest column fits the space
         font = F(SANS_R, size)
@@ -498,7 +545,7 @@ def main():
                 nw = text_w(draw, f"{num} ", F(SANS_B, size))
                 hgt += len(wrap(draw, text, font, col_w - nw - 2)) * (size + 2) + 2
             worst = max(worst, hgt)
-        if worst <= 118:
+        if worst <= 114:
             break
         size -= 1
     font = F(SANS_R, size)
@@ -516,31 +563,36 @@ def main():
                           fill=INK)
             cy += len(lines) * lh + 2
 
-    # 9 — differentiator boxes ---------------------------------------------------------------
-    y = 902
+    # 10 — differentiator boxes ---------------------------------------------------------------
+    y = 890
     bw2 = (WIDTH - 4 * 6) // 5
     for i, (name, body) in enumerate(BOXES):
         bx = x0 + i * (bw2 + 6)
-        draw.rectangle([bx, y, bx + bw2, y + 64], fill=PAPER, outline=NAVY,
+        draw.rectangle([bx, y, bx + bw2, y + 56], fill=PAPER, outline=NAVY,
                        width=1)
         draw.rectangle([bx, y, bx + bw2, y + 15], fill=NAVY)
         draw.text((bx + 6, y + 3), name, font=F(SANS_B, 9),
                   fill=(255, 255, 255))
-        block(draw, bx + 6, y + 19, body, SANS_R, 9, bw2 - 12, 4, INK,
+        block(draw, bx + 6, y + 18, body, SANS_R, 9, bw2 - 12, 3, INK,
               line_h=11)
 
-    # 10 — footer: red DATE CHECK box + colophon line -------------------------------------------
-    y = 974
-    draw.rectangle([x0, y, x1, y + 24], fill=CRIMSON)
-    check = ("DATE CHECK — first reported Wednesday 18 Nov and deliberately "
-             "left out: the $190.4m Van Gogh sale and Voyager 1 reaching "
-             "one light-day.")
-    centered(draw, CANVAS / 2, y + 12, check,
-             fit_one_line(draw, check, SANS_B, 11, WIDTH - 16),
+    # 11 — corrections strip ---------------------------------------------------------------------
+    y = 952
+    draw.rectangle([x0, y, x1, y + 18], fill=NAVY)
+    centered(draw, CANVAS / 2, y + 9, CORRECTIONS,
+             fit_one_line(draw, CORRECTIONS, SANS_B, 10, WIDTH - 16),
              (255, 255, 255))
-    foot = ("44 stories · drawn and set in one page · sources: wire and "
-            "daily briefs of Thursday 19 November 2026")
-    centered(draw, CANVAS / 2, 1012, foot,
+
+    # 12 — footer: red DATE CHECK box + colophon line -------------------------------------------
+    y = 976
+    draw.rectangle([x0, y, x1, y + 24], fill=CRIMSON)
+    centered(draw, CANVAS / 2, y + 12, DATE_CHECK,
+             fit_one_line(draw, DATE_CHECK, SANS_B, 11, WIDTH - 16),
+             (255, 255, 255))
+    foot = ("50 stories · drawn and set in one page · sources: Reuters, "
+            "AP, AFP, BBC, Al Jazeera, UN News and the wires of Thursday "
+            "19 November 2026")
+    centered(draw, CANVAS / 2, 1011, foot,
              fit_one_line(draw, foot, SANS_R, 10, WIDTH), NAVY)
 
     # --- save, keeping the file at or under 1 MiB ----------------------------------------------

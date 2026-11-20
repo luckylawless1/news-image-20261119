@@ -1,14 +1,14 @@
-// The World Today — 19 November 2026 in one image.
+// The World in One Day — Thursday 19 November 2026 in one image.
 //
 // Entry for the make.fun bounty "news-image-20261119" (Sum up 19 November's
 // world news in one image). The picture is a newspaper front page for
-// Thursday 19 November 2026, composed by compose.py from five editorial
+// Thursday 19 November 2026, composed by compose.py from the editorial
 // illustration panels in assets/ — the Shenzhen trilateral summit of
 // Presidents Trump, Xi and Putin, the ICJ ruling on the Rohingya genocide
-// case, the deadlocked COP31 talks in Antalya, the tanker struck in the
-// Strait of Hormuz, and the third strike in a week on the Crimean Bridge —
-// under a masthead, with captions and a news ticker drawn by the program so
-// every word is crisp.
+// case, the deadlocked COP31 talks in Antalya, and the tankers burning in
+// the Strait of Hormuz as the page's Picture of the Day — under a masthead,
+// with 50 date-checked stories, a corrections strip, captions and a news
+// ticker drawn by the program so every word is crisp.
 //
 // The composed page is committed beside this file as entry.png. This
 // program's only job is to write that image to the output directory, byte
